@@ -1,0 +1,46 @@
+=== Problem 1: Namespace ===
+[Part 1] Math::add(10, 7) = 17
+[Part 2] Math::mul(10, 7) = 70
+[Part 3] Logic::add(10, 7) = 24
+[Part 4] Logic::Sub::add(10, 7) = 3
+[Part 5] Alias M = Math: M::add(10, 7) = 17
+[Part 6] using Declaration: add(10, 7) = 17
+[Part 7] using namespace Directive: add(10, 7) = 24
+=== Problem 2: Upcasting & Virtual Function ===
+[Part 1] describe() via Animal* (Static Binding)
+I am an Animal named Max.
+I am an Animal named Mittens.
+[Part 2] speak() via Animal* (Dynamic Binding)
+Woof! I am Max.
+Meow! I am Mittens.
+[Part 3] Polymorphic array
+Woof! I am Max.
+Meow! I am Mittens.
+=== Problem 3: Virtual Destructor ===
+[Part 1] Create Derived object
+[Base] constructor: Dragon
+[Derived] constructor: Dragon (size=2)
+[Part 2] Delete via Base pointer
+[Derived] destructor: Dragon
+[Base] destructor: Dragon
+[Part 3] Object deleted
+=== Problem 4: Integrated ===
+[Part 1] Status
+Knight | Name: Gawain | HP: 150
+Wizard | Name: Saruman | HP: 60
+Archer | Name: Katniss | HP: 110
+[Part 2] Attack (Dynamic Dispatch)
+Knight Gawain attacks with sword! Deals 45 damage.
+Wizard Saruman casts a spell! Deals 80 damage.
+Archer Katniss shoots an arrow! Deals 30 damage.
+[Part 3] Type
+[Knight] Gawain
+[Wizard] Saruman
+[Archer] Katniss
+[Part 4] Destroy
+[Knight] destructor: Gawain
+[Character] destructor: Gawain
+[Wizard] destructor: Saruman
+[Character] destructor: Saruman
+[Archer] destructor: Katniss
+[Character] destructor: Katniss

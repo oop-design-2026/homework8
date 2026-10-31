@@ -1,0 +1,4 @@
+8 4
+Buddy Luna
+Shadow 5
+Lancelot 120 40 Gandalf 70 60 Legolas 95 35

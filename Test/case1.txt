@@ -1,0 +1,4 @@
+5 3
+Rex Whiskers
+Hero 3
+Arthur 100 30 Merlin 80 50 Robin 90 25

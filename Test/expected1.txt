@@ -1,0 +1,46 @@
+=== Problem 1: Namespace ===
+[Part 1] Math::add(5, 3) = 8
+[Part 2] Math::mul(5, 3) = 15
+[Part 3] Logic::add(5, 3) = 11
+[Part 4] Logic::Sub::add(5, 3) = 2
+[Part 5] Alias M = Math: M::add(5, 3) = 8
+[Part 6] using Declaration: add(5, 3) = 8
+[Part 7] using namespace Directive: add(5, 3) = 11
+=== Problem 2: Upcasting & Virtual Function ===
+[Part 1] describe() via Animal* (Static Binding)
+I am an Animal named Rex.
+I am an Animal named Whiskers.
+[Part 2] speak() via Animal* (Dynamic Binding)
+Woof! I am Rex.
+Meow! I am Whiskers.
+[Part 3] Polymorphic array
+Woof! I am Rex.
+Meow! I am Whiskers.
+=== Problem 3: Virtual Destructor ===
+[Part 1] Create Derived object
+[Base] constructor: Hero
+[Derived] constructor: Hero (size=3)
+[Part 2] Delete via Base pointer
+[Derived] destructor: Hero
+[Base] destructor: Hero
+[Part 3] Object deleted
+=== Problem 4: Integrated ===
+[Part 1] Status
+Knight | Name: Arthur | HP: 100
+Wizard | Name: Merlin | HP: 80
+Archer | Name: Robin | HP: 90
+[Part 2] Attack (Dynamic Dispatch)
+Knight Arthur attacks with sword! Deals 30 damage.
+Wizard Merlin casts a spell! Deals 50 damage.
+Archer Robin shoots an arrow! Deals 25 damage.
+[Part 3] Type
+[Knight] Arthur
+[Wizard] Merlin
+[Archer] Robin
+[Part 4] Destroy
+[Knight] destructor: Arthur
+[Character] destructor: Arthur
+[Wizard] destructor: Merlin
+[Character] destructor: Merlin
+[Archer] destructor: Robin
+[Character] destructor: Robin

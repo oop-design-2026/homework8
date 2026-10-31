@@ -1,0 +1,4 @@
+10 7
+Max Mittens
+Dragon 2
+Gawain 150 45 Saruman 60 80 Katniss 110 30
