@@ -47,7 +47,15 @@ homework8/
 
 ## 문제 1 — Namespace (`problem1.cpp`)
 
-서로 다른 Namespace 에 동일한 이름의 함수가 존재할 때 **이름 충돌을 방지하고 각 함수를 호출하는 방법**을 확인합니다.
+runner 함수가 올바르게 동작하도록 Namespace 와 함수를 직접 설계하고 구현하세요.
+
+**활용 개념**
+
+- Namespace 정의 및 Scope Resolution Operator(`::`)
+- Nested Namespace
+- Namespace Alias — `M` 은 `Math` 의 Alias 입니다
+- using Declaration — 특정 이름 하나만 가져옴
+- using namespace Directive — Namespace 전체를 가져옴
 
 **구현할 Namespace 구조**
 
@@ -58,140 +66,92 @@ homework8/
 | `Logic` | `add(a, b)` | `a + b + b` (= a + 2b) |
 | `Logic::Sub` (Nested) | `add(a, b)` | `a - b` |
 
-**요구 사항**
+**구현할 wrapper 함수**
 
-- `Math` 와 `Logic` Namespace 를 각각 정의하세요.
-- `Logic::Sub` 는 `Logic` 안에 정의된 Nested Namespace 입니다.
-- Namespace Alias `M = Math` 로 `M::add` 를 호출할 수 있어야 합니다.
-- `using Math::add;` (Declaration) 와 `using namespace Logic;` (Directive) 의 차이를 확인합니다.
+| 함수 | 요구 사항 |
+|---|---|
+| `callWithAlias(a, b)` | 함수 내부에서 Namespace Alias 를 선언하고 `M::add(a, b)` 를 반환 |
+| `callWithDeclaration(a, b)` | 함수 내부에서 using Declaration 을 선언하고 `add(a, b)` 를 반환 |
+| `callWithDirective(a, b)` | 함수 내부에서 using namespace Directive 를 선언하고 `add(a, b)` 를 반환 |
 
-```cpp
-// a=5, b=3 기준
-Math::add(5, 3)         // 8   (Scope Resolution)
-Math::mul(5, 3)         // 15
-Logic::add(5, 3)        // 11  (= 5 + 3 + 3)
-Logic::Sub::add(5, 3)   // 2   (Nested Namespace)
-M::add(5, 3)            // 8   (Alias)
-// using Math::add;  → add(5, 3) = 8   (Declaration: Math::add 만 가져옴)
-// using namespace Logic; → add(5, 3) = 11 (Directive: Logic 전체)
+**기대 출력 — a=5, b=3 기준**
+
+```
+[Part 1] Math::add(5, 3) = 8
+[Part 2] Math::mul(5, 3) = 15
+[Part 3] Logic::add(5, 3) = 11
+[Part 4] Logic::Sub::add(5, 3) = 2
+[Part 5] Alias M = Math: M::add(5, 3) = 8
+[Part 6] using Declaration: add(5, 3) = 8
+[Part 7] using namespace Directive: add(5, 3) = 11
 ```
 
 ---
 
 ## 문제 2 — Upcasting & Virtual Function (`problem2.cpp`)
 
-Derived Class Object 를 Base Class Pointer 로 참조할 때, **Virtual Function 유무에 따라 호출되는 함수가 달라진다는 점**을 확인합니다.
+`Animal`, `Dog`, `Cat` 클래스를 구현하세요.  
+runner 코드를 분석하여 각 함수에 필요한 특성을 스스로 판단하세요.
 
-**클래스 구조**
+**출력 형식**
 
-| 클래스 | 멤버 | 접근 지정자 | 설명 |
-|---|---|---|---|
-| `Animal` (base) | `string name` | protected | 이름 |
-| `Dog` (derived) | — | — | `Animal` 을 public 상속 |
-| `Cat` (derived) | — | — | `Animal` 을 public 상속 |
+| 함수 | 출력 |
+|---|---|
+| `Animal::describe()` | `I am an Animal named <name>.` |
+| `Dog::describe()` | `I am a Dog named <name>.` |
+| `Cat::describe()` | `I am a Cat named <name>.` |
+| `Dog::speak()` | `Woof! I am <name>.` |
+| `Cat::speak()` | `Meow! I am <name>.` |
 
-**요구 사항**
+**동작 특성**
 
-- `void describe() const` — **Non-virtual**: `Animal*` 로 호출하면 항상 `Animal::describe()` 가 불립니다 (Static Binding).
-  - `Animal::describe()` → `"I am an Animal named <name>."` 출력
-  - `Dog::describe()` → `"I am a Dog named <name>."` 출력 (직접 호출 시에만)
-  - `Cat::describe()` → `"I am a Cat named <name>."` 출력 (직접 호출 시에만)
-- `virtual void speak() const` — **Virtual**: `Animal*` 로 호출해도 실제 객체 타입의 함수가 불립니다 (Dynamic Binding).
-  - `Dog::speak()` → `"Woof! I am <name>."` 출력, `override` 사용
-  - `Cat::speak()` → `"Meow! I am <name>."` 출력, `override` 사용
-- `virtual ~Animal()` 를 선언하세요.
-
-```cpp
-Dog dog("Rex");  Cat cat("Whiskers");
-Animal* p;
-p = &dog;  p->describe(); // "I am an Animal named Rex."   (Static Binding)
-p = &dog;  p->speak();    // "Woof! I am Rex."             (Dynamic Binding)
-p = &cat;  p->speak();    // "Meow! I am Whiskers."        (Dynamic Binding)
-```
-
-`Dog` / `Cat` 이 `Animal` 을 public 상속하지 않으면 `static_assert` 에 의해 빌드가 실패합니다.
+- `describe()` : `Animal*` 로 호출하면 실제 객체 타입과 관계없이 항상 `Animal` 의 버전이 호출됩니다.
+- `speak()` : `Animal*` 로 호출하더라도 실제 객체 타입(`Dog`/`Cat`)에 따라 서로 다른 버전이 호출됩니다.
+- `Dog::speak()`, `Cat::speak()` 은 Base Class 의 `speak()` 와 함수 Signature 가 정확히 일치함을 컴파일러가 검증할 수 있어야 합니다.
+- `Animal*` 로 `Dog` / `Cat` 객체를 안전하게 가리킬 수 있어야 합니다.
 
 ---
 
 ## 문제 3 — Virtual Destructor (`problem3.cpp`)
 
-Base Class Pointer 를 통해 Derived Class Object 를 삭제할 때 **Virtual Destructor 가 필요한 이유**를 확인합니다.
+`Base`, `Derived` 클래스를 구현하세요.  
+runner 코드를 분석하여 각 클래스에 필요한 특성을 스스로 판단하세요.
 
-**클래스 구조**
+**출력 형식**
 
-| 클래스 | 멤버 | 접근 지정자 | 설명 |
-|---|---|---|---|
-| `Base` (base) | `string name` | protected | 이름 |
-| `Derived` (derived) | `int* data`, `int size` | private | 동적 할당 배열 |
+| 시점 | 출력 |
+|---|---|
+| `Base` 생성 시 | `[Base] constructor: <name>` |
+| `Derived` 생성 시 | `[Derived] constructor: <name> (size=<size>)` |
+| `Derived` 소멸 시 | `[Derived] destructor: <name>` |
+| `Base` 소멸 시 | `[Base] destructor: <name>` |
 
-**요구 사항**
+**동작 특성**
 
-- `Base(const string& name)` → `"[Base] constructor: <name>"` 출력
-- `virtual ~Base()` → `"[Base] destructor: <name>"` 출력
-- `Derived(const string& name, int size)` → `new int[size]` 로 메모리 할당, `"[Derived] constructor: <name> (size=<size>)"` 출력
-- `~Derived() override` → `"[Derived] destructor: <name>"` 출력, `delete[] data` 로 메모리 해제
-- Virtual Destructor 가 없으면 `Base*` 로 `delete` 시 `Derived::~Derived()` 가 호출되지 않아 메모리 누수가 발생합니다.
-
-```cpp
-Base* p = new Derived("Hero", 3);
-// [Base] constructor: Hero
-// [Derived] constructor: Hero (size=3)
-delete p;
-// [Derived] destructor: Hero   ← virtual 덕분에 올바르게 호출됨
-// [Base] destructor: Hero
-```
+- `Derived` 는 생성 시 크기 `size` 의 `int` 배열을 동적 할당하고, 소멸 시 메모리 누수 없이 해제해야 합니다.
+- `Base*` 로 `delete` 했을 때 `Derived` 의 소멸자가 반드시 먼저 호출된 후 `Base` 의 소멸자가 호출되어야 합니다.
+- `Derived` 의 소멸자는 `Base` 의 소멸자와 함수 Signature 가 정확히 일치함을 컴파일러가 검증할 수 있어야 합니다.
+- 생성과 소멸의 순서는 반대여야 합니다 — 생성: `Base` → `Derived` / 소멸: `Derived` → `Base`
 
 ---
 
 ## 문제 4 — Integrated (`problem4.cpp`)
 
-**Interface Class, Pure Virtual Function, Function Overriding, Dynamic Dispatch** 를 함께 활용합니다.
-
 `Character` Interface Class 는 이미 제공되어 있습니다. `Knight`, `Wizard`, `Archer` 를 구현하세요.
 
-**제공되는 Character Interface**
+**출력 형식**
 
-```cpp
-class Character {
-protected:
-    string name;
-    int hp;
-    int damage;
-public:
-    Character(const string& name, int hp, int damage);
-    virtual void attack() const = 0;       // Pure Virtual
-    virtual void status() const = 0;       // Pure Virtual
-    virtual string getType() const = 0;    // Pure Virtual
-    virtual ~Character();                  // "[Character] destructor: <name>" 출력
-    string getName() const;
-};
-```
+| 클래스 | `attack()` 출력 | `status()` 출력 | `getType()` | 소멸 시 출력 |
+|---|---|---|---|---|
+| `Knight` | `Knight <name> attacks with sword! Deals <damage> damage.` | `Knight \| Name: <name> \| HP: <hp>` | `"Knight"` | `[Knight] destructor: <name>` |
+| `Wizard` | `Wizard <name> casts a spell! Deals <damage> damage.` | `Wizard \| Name: <name> \| HP: <hp>` | `"Wizard"` | `[Wizard] destructor: <name>` |
+| `Archer` | `Archer <name> shoots an arrow! Deals <damage> damage.` | `Archer \| Name: <name> \| HP: <hp>` | `"Archer"` | `[Archer] destructor: <name>` |
 
-**구현할 Derived Class**
+**동작 특성**
 
-| 클래스 | `attack()` 출력 | `status()` 출력 | `getType()` |
-|---|---|---|---|
-| `Knight` | `"Knight <name> attacks with sword! Deals <damage> damage."` | `"Knight \| Name: <name> \| HP: <hp>"` | `"Knight"` |
-| `Wizard` | `"Wizard <name> casts a spell! Deals <damage> damage."` | `"Wizard \| Name: <name> \| HP: <hp>"` | `"Wizard"` |
-| `Archer` | `"Archer <name> shoots an arrow! Deals <damage> damage."` | `"Archer \| Name: <name> \| HP: <hp>"` | `"Archer"` |
-
-**요구 사항**
-
-- 모든 Pure Virtual Function 을 구현하고 `override` keyword 를 사용하세요.
-- 각 Destructor(`~Knight()` 등) 는 `"[Knight] destructor: <name>"` 을 출력하세요.
-- `Character*` 배열에서 `attack()` 을 호출하면 실제 객체 타입에 따라 서로 다른 함수가 불려야 합니다 (Dynamic Dispatch).
-- `delete` 시 Derived Destructor → `Character` Destructor 순서로 호출되어야 합니다.
-
-```cpp
-Character* c = new Knight("Arthur", 100, 30);
-c->status();   // "Knight | Name: Arthur | HP: 100"
-c->attack();   // "Knight Arthur attacks with sword! Deals 30 damage."
-delete c;
-// "[Knight] destructor: Arthur"
-// "[Character] destructor: Arthur"
-```
-
-`Knight`, `Wizard`, `Archer` 가 `Character` 를 public 상속하지 않으면 `static_assert` 에 의해 빌드가 실패합니다.
+- `Character*` 배열로 관리하더라도 실제 객체 타입에 따라 서로 다른 `attack()`, `status()`, `getType()` 이 호출되어야 합니다.
+- `Character` 의 순수 가상 함수를 모두 구현해야 하며, 함수 Signature 가 Interface 와 정확히 일치함을 컴파일러가 검증할 수 있어야 합니다.
+- `Character*` 로 `delete` 했을 때 각 Derived Class 의 소멸자가 먼저 호출된 후 `Character` 의 소멸자가 호출되어야 합니다.
 
 ---
 
