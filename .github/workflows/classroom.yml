@@ -31,7 +31,7 @@ jobs:
           setup-command: ''
           command: bash Test/check.sh 1
           timeout: 10
-          max-score: 20
+          max-score: 25
 
       - name: Problem 2
         id: prob2
@@ -51,7 +51,7 @@ jobs:
           setup-command: ''
           command: bash Test/check.sh 3
           timeout: 10
-          max-score: 20
+          max-score: 25
 
       - name: Problem 4
         id: prob4
@@ -61,7 +61,7 @@ jobs:
           setup-command: ''
           command: bash Test/check.sh 4
           timeout: 10
-          max-score: 35
+          max-score: 25
 
       - name: Autograding Reporter
         uses: education/autograding-grading-reporter@v1
